@@ -57,6 +57,18 @@ public class CassandraTest {
         session.execute(sql.toString());
     }
 
+    public void insertSimpleData() {
+        String sql = "INSERT INTO myspace.users (id, first_name, last_name, age) VALUES (?, ?, ?, ?);";
+        PreparedStatement insertStatement = session.prepare(sql);
+
+        BoundStatement boundStatement = new BoundStatement(insertStatement);
+
+
+        session.execute(
+                boundStatement.bind(UUID.randomUUID(),"likg", "中国", 10));
+
+    }
+
     public void insertData() {
         String sql = "INSERT INTO myspace.users (id, first_name, last_name, age, emails,avatar) "
                 + "VALUES (?, ?, ?, ?, ?, ?);";
@@ -104,7 +116,6 @@ public class CassandraTest {
             try {
                 fileOutputStream = new FileOutputStream("e:\\2.png");
             } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             try {
@@ -113,7 +124,6 @@ public class CassandraTest {
                         byteBuffer.limit() - byteBuffer.position());
                 fileOutputStream.close();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
@@ -173,6 +183,7 @@ public class CassandraTest {
         client.connect("127.0.0.1");
         client.createTable();
         //client.insertData();
+        client.insertSimpleData();
         client.loadData();
         client.session.close();
         client.close();
