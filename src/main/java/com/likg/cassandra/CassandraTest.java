@@ -32,13 +32,20 @@ public class CassandraTest {
      * @param node
      */
     public void connect(String node) {
-        cluster = Cluster.builder().addContactPoint(node).build();
+        cluster = Cluster.builder().addContactPoint(node)
+                //.withPort(9160)
+                .build();
+
+        Session kpSession = cluster.connect();
+
         Metadata metadata = cluster.getMetadata();
         System.out.printf("Connected to cluster: %s\n", metadata.getClusterName());
         for (Host host : metadata.getAllHosts()) {
             System.out.printf("Datatacenter: %s; Host: %s; Rack: %s\n",
                     host.getDatacenter(), host.getAddress(), host.getRack());
         }
+
+        org.slf4j.impl.StaticLoggerBinder s;
 
         this.session = cluster.connect();
     }
@@ -180,7 +187,8 @@ public class CassandraTest {
 
     public static void main(String[] args) {
         CassandraTest client = new CassandraTest();
-        client.connect("127.0.0.1");
+        //client.connect("127.0.0.1");
+        client.connect("172.17.0.1");
         client.createTable();
         //client.insertData();
         client.insertSimpleData();
