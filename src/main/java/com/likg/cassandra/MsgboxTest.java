@@ -27,8 +27,9 @@ public class MsgboxTest {
         ResultSet resultSet = client.getSession().execute(sql);
         System.out.println(String.format("%-30s\t%-20s\t%-20s\n%s", "first_name","last_name", "age","-------------------------------+-----------------------+--------------------"));
         for (Row row : resultSet) {
-            System.out.println(String.format("%-30s\t%-20s\t%-20s",
-                    row.getString("from_uid"), row.getString("to_uid")));
+//            System.out.println(String.format("%-30s\t%-20s\t%-20s",
+//                    row.getString("from_uid"), row.getString("to_uid")));
+            System.out.println(row);
 
 
         }

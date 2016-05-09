@@ -15,7 +15,7 @@ public class CassandraClient {
     private Session session;
 
     public void connect() {
-        String node = "172.17.0.1";
+        String node = "172.17.0.12";
         cluster = Cluster.builder().addContactPoint(node)
                 //.withPort(9160)
                 .build();

@@ -11,15 +11,20 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class TestC {
+
+
+    private static ThreadPoolExecutor servicepool = (ThreadPoolExecutor) Executors.newFixedThreadPool(100);
 
 
 
     public static void main(String[] args) {
 
-        //addUser();
-        getUser();
+        addUser();
+        //getUser();
 
         //getMsginfo();
 
@@ -43,18 +48,57 @@ public class TestC {
     }
 
     public static void addUser(){
-        Cluster cluster = Cluster.builder().addContactPoint("172.17.0.1").build();
+        SocketOptions socketOptions = new SocketOptions();
+        socketOptions.setConnectTimeoutMillis(5000);
+        socketOptions.setKeepAlive(true);
 
-        Session session = cluster.connect("demo");
-
-        String sql = "INSERT INTO demo.users (key,full_name) VALUES (?,?);";
-        PreparedStatement insertStatement = session.prepare(sql);
-        BoundStatement boundStatement = new BoundStatement(insertStatement);
-        session.execute(boundStatement.bind("1", "likg"));
+        NettyOptions nettyOptions = new NettyOptions();
+        //nettyOptions.
 
 
-        session.close();
-        cluster.close();
+        Cluster cluster = Cluster.builder().addContactPoint("172.17.0.12")
+                .withSocketOptions(socketOptions)
+                //.withNettyOptions(nettyOptions)
+                .build();
+        Session session = null;
+
+
+
+
+//        servicepool.execute(new Runnable() {
+//            public void run() {
+//
+//            }
+//        });
+
+        try {
+            long time = System.currentTimeMillis();
+            session = cluster.connect("xmmsg");
+
+            long id = System.currentTimeMillis();
+
+            String sql = "INSERT INTO xmmsg.msgbox2 (msgid,from_uid,to_uid,to_appid,msg) VALUES (?,?,?,1,?);";
+            PreparedStatement insertStatement = session.prepare(sql);
+            for(int i=0; i<100000; i++){
+
+                String msg = "msg"+i;
+                ByteBuffer b = ByteBuffer.wrap(msg.getBytes());
+
+                BoundStatement boundStatement = new BoundStatement(insertStatement);
+                //session.execute(boundStatement.bind(id++, 1L, 1L, b));
+                session.executeAsync(boundStatement.bind(id++, 1L, 1L, b));
+            }
+
+            time = System.currentTimeMillis() - time;
+            System.out.println("time===" + time);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            session.close();
+            cluster.close();
+        }
+
     }
     public static void getUser(){
         Cluster cluster = Cluster.builder().addContactPoint("172.17.0.1").build();
