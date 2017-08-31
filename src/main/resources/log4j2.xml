@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info">
+    <properties>
+        <property name="log.dir">/data/logs/</property>
+    </properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss,SSS} %1p [%C{1}:%L] - %m%n</Pattern>
+            </PatternLayout>
+        </Console>
+
+        <RollingRandomAccessFile name="DebugLog" fileName="${log.dir}/ms.log" filePattern="${log.dir}/ms.log.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss,SSS} %1p [%C{1}:%L] - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingRandomAccessFile>
+
+
+        <SMTP name="Mail" subject="ErrorLog" from="mail@huluuu.com" to="1171602588@qq.com"
+              smtpHost="smtp.ym.163.com" smtpPassword="mail123" smtpPort="25" bufferSize="50" smtpDebug="true"
+              smtpUsername="mail@huluuu.com">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss,SSS} %1p [%C{1}:%L] - %m%n</Pattern>
+            </PatternLayout>
+        </SMTP>
+
+
+        <SMTP name="Mail2" subject="Error Log" from="mail@if-chat.com" to="1171602588@qq.com"
+              smtpHost="mail.if-chat.com" smtpPassword="hulu123" smtpPort="465" bufferSize="50" smtpDebug="true"
+              smtpUsername="mail@if-chat.com">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss,SSS} %1p [%C{1}:%L] - %m%n</Pattern>
+            </PatternLayout>
+        </SMTP>
+
+
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.likg" level="info" additivity="true">
+            <AppenderRef ref="DebugLog"/>
+            <AppenderRef ref="Mail2" level="error" />
+        </Logger>
+
+        <Root level="trace">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>

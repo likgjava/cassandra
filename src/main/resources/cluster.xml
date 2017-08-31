@@ -1,0 +1,37 @@
+<clusters>
+
+    <cluster>
+        <name>xm</name>
+
+        <hosts>
+            <host>172.17.0.1</host>
+            <host>172.17.0.2</host>
+            <host>172.17.0.3</host>
+        </hosts>
+
+        <username>admin</username>
+        <password>da#@I*O(</password>
+
+        <keyspaces>
+            <keyspace>xmmsg</keyspace>
+        </keyspaces>
+
+        <!--WhiteList-->
+        <loadbalancepolicy>RoundRobin</loadbalancepolicy>
+        <retrypolicy>Default</retrypolicy>
+        <reconnectionpolicy>Exponential</reconnectionpolicy>
+
+        <reconnectioncomtime>300</reconnectioncomtime>
+        <reconnectionmaxtime>3000</reconnectionmaxtime>
+
+        <whitelists>
+            <whitenode>172.17.0.1</whitenode>
+            <whitenode>172.17.0.2</whitenode>
+            <whitenode>172.17.0.3</whitenode>
+        </whitelists>
+
+        <thriftport>9042</thriftport>
+
+    </cluster>
+
+</clusters>
